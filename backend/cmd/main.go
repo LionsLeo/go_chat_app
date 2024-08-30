@@ -3,6 +3,7 @@ package main
 import (
 	"chat_server/db"
 	"chat_server/internal/user"
+	"chat_server/internal/ws"
 	"chat_server/router"
 	"log"
 )
@@ -17,6 +18,9 @@ func main() {
 	userSvc := user.NewService(userRep)
 	userHandler := user.NewHandler(userSvc)
 
-	router.InitRouter(userHandler)
+	hub := ws.NewHub()
+	wsHandler := ws.NewHandler(hub)
+
+	router.InitRouter(userHandler, wsHandler)
 	router.Start("0.0.0.0:8080")
 }
